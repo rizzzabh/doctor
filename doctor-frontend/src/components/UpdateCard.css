@@ -1,13 +1,24 @@
+.update-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .update-card {
   background: #ffffff;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #e9ecef;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   margin: 10px;
   width: 280px;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* To make footer corners rounded */
+  overflow: hidden; /* For footer */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.update-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .update-card-body {
@@ -16,12 +27,15 @@
 
 .update-card-body h3 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .update-card-body p {
   margin: 5px 0;
-  color: #555;
+  color: #495057;
+  font-size: 0.95rem;
 }
 
 .update-card-footer {
@@ -31,17 +45,14 @@
   text-align: center;
   font-size: 0.9rem;
 }
-.update-card-link {
-  text-decoration: none; /* Removes the underline from the link */
-  color: inherit; /* Makes the text color normal */
-}
 
-.update-card {
-  /* ... (rest of your styles are the same) ... */
-  transition: box-shadow 0.2s, transform 0.2s; /* Add a little hover effect */
+/* Color Themes */
+.update-card-footer.prescription {
+  background-color: #e67e22; /* Orange */
 }
-
-.update-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.update-card-footer.appointment {
+  background-color: #3498db; /* Blue */
+}
+.update-card-footer.none {
+  background-color: #95a5a6; /* Gray */
 }

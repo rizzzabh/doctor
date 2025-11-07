@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import "../App.css";
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ function RegisterPage() {
     specialization: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const { name, email, password, specialization } = formData;
@@ -19,82 +21,80 @@ function RegisterPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
+    setLoading(true);
     try {
-      // Our backend API endpoint
-      const res = await axios.post(
-        "http://localhost:5001/api/auth/register",
-        formData
-      );
+      await axios.post("http://localhost:5001/api/auth/register", formData);
 
-      console.log(res.data); // This will log the { token: "..." }
-
-      // Store the token in localStorage
-      localStorage.setItem("token", res.data.token);
-
-      // TODO: In the next step, we will redirect to the dashboard
-      // navigate('/dashboard');
-
-      alert("Registration Successful! Redirecting to login...");
+      alert("Registration Successful! Please log in.");
       navigate("/login");
     } catch (err) {
-      console.error(err.response.data);
-      setError(err.response.data.msg || "Registration failed");
+      const errorMsg =
+        err.response && err.response.data
+          ? err.response.data.msg
+          : "Registration failed";
+      setError(errorMsg);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="form-container">
-      <h2>Doctor Registration</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={onSubmit}>
-        <div className="form-group">
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Specialization</label>
-          <input
-            type="text"
-            name="specialization"
-            value={specialization}
-            onChange={onChange}
-          />
-        </div>
-        <button type="submit">Register</button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Login here</Link>
-      </p>
+    <div className="auth-container">
+      <div className="form-container">
+        <h2>Doctor Registration</h2>
+        {error && <div className="auth-error">{error}</div>}
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Specialization (Optional)</label>
+            <input
+              type="text"
+              name="specialization"
+              value={specialization}
+              onChange={onChange}
+            />
+          </div>
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
+        </form>
+        <p>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
+      </div>
     </div>
   );
 }

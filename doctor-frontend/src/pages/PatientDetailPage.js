@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import DoctorRecommendationService from "../services/DoctorRecommendationService";
-import "./PatientDetailPage.css";
+import "./PatientDetailPage.css"; // New styles
 
+// Create a single instance of the service
 const recommendationService = new DoctorRecommendationService();
 
 function PatientDetailPage() {
@@ -14,16 +15,15 @@ function PatientDetailPage() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isServiceReady, setIsServiceReady] = useState(false);
 
+  // Load the recommendation rules
   useEffect(() => {
     const loadServiceRules = async () => {
       try {
-        console.log("DEBUG: 1. Loading rules..."); // Log 1
         const success = await recommendationService.loadRules(
           "/Riders_12_March_2025.json"
         );
         if (success) {
           setIsServiceReady(true);
-          console.log("DEBUG: 2. Rules loaded successfully."); // Log 2
         } else {
           setError("CRITICAL: Failed to load recommendation rules.");
         }
@@ -35,6 +35,7 @@ function PatientDetailPage() {
     loadServiceRules();
   }, []);
 
+  // Fetch the patient data
   useEffect(() => {
     const fetchPatient = async () => {
       setLoading(true);
@@ -51,7 +52,6 @@ function PatientDetailPage() {
           config
         );
         setPatient(res.data);
-        console.log("DEBUG: 3. Patient data fetched:", res.data); // Log 3
         setLoading(false);
       } catch (err) {
         console.error("Fetch Patient Error:", err);
@@ -68,26 +68,13 @@ function PatientDetailPage() {
       setError("Service is not ready or no patient data.");
       return;
     }
-
     setIsCalculating(true);
     setError("");
-
     try {
-      // --- START OF DEBUG BLOCK ---
-      console.log("DEBUG: 4. handleCalculateAndSave triggered.");
-      console.log("DEBUG: 5. Service Ready?", isServiceReady);
-      console.log("DEBUG: 6. Using Grade:", patient.grade);
-      console.log("DEBUG: 7. Using Code:", JSON.stringify(patient.code));
-      // --- END OF DEBUG BLOCK ---
-
       const calculatedStructure = recommendationService.getRecommendation(
         patient.grade,
         patient.code
       );
-
-      // --- THIS IS THE MOST IMPORTANT LOG ---
-      console.log("DEBUG: 8. Calculated Structure:", calculatedStructure);
-      // ---
 
       if (
         calculatedStructure.includes("Error") ||
@@ -95,7 +82,7 @@ function PatientDetailPage() {
       ) {
         setError(calculatedStructure);
         setIsCalculating(false);
-        return; // Stop if calculation failed
+        return;
       }
 
       const token = localStorage.getItem("token");
@@ -106,17 +93,11 @@ function PatientDetailPage() {
       }
 
       const config = { headers: { "x-auth-token": token } };
-
       const res = await axios.put(
         `http://localhost:5001/api/patients/${id}/structure`,
         { molecular_structure: calculatedStructure },
         config
       );
-
-      console.log(
-        "DEBUG: 9. Save successful. Server responded with:",
-        res.data
-      ); // Log 9
       setPatient(res.data);
       setIsCalculating(false);
     } catch (err) {
@@ -130,18 +111,35 @@ function PatientDetailPage() {
     }
   };
 
-  // ... (rest of the file (JSX) is the same) ...
-
   if (loading) {
-    return <h2>Loading patient details...</h2>;
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Loading Patient...</h2>
+        </div>
+      </div>
+    );
   }
 
   if (error && !patient) {
-    return <h2 style={{ color: "red" }}>{error}</h2>;
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Error</h2>
+        </div>
+        <p className="page-error">{error}</p>
+      </div>
+    );
   }
 
   if (!patient) {
-    return <h2>Patient not found.</h2>;
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Patient Not Found</h2>
+        </div>
+      </div>
+    );
   }
 
   const renderObject = (obj) => {
@@ -150,13 +148,14 @@ function PatientDetailPage() {
 
   return (
     <div className="patient-detail-container">
-      <Link to="/dashboard/patients" className="back-link">
-        &larr; Back to Patients List
-      </Link>
+      <div className="detail-page-header">
+        <Link to="/dashboard/patients" className="back-link">
+          &larr; Back to Patients List
+        </Link>
+        <h2 className="patient-name-header">{patient.name}</h2>
+      </div>
 
-      <h2 className="patient-name-header">{patient.name}</h2>
-
-      {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
+      {error && <p className="page-error">{error}</p>}
 
       <div className="detail-grid">
         <div className="detail-card">
@@ -172,11 +171,6 @@ function PatientDetailPage() {
           </p>
         </div>
 
-        <div className="detail-card full-width">
-          <h3>Medical History</h3>
-          {renderObject(patient.medical_history)}
-        </div>
-
         <div className="detail-card">
           <h3>Calculation Data (Raw)</h3>
           <p>
@@ -188,24 +182,24 @@ function PatientDetailPage() {
           {renderObject(patient.code)}
         </div>
 
-        <div className="detail-card">
+        <div className="detail-card full-width">
+          <h3>Medical History</h3>
+          {renderObject(patient.medical_history)}
+        </div>
+
+        <div className="detail-card full-width">
           <h3>Recommended Structure</h3>
           {patient.molecular_structure ? (
-            <pre
-              style={{
-                backgroundColor: "#eafaf1",
-                border: "1px solid #27ae60",
-              }}
-            >
+            <div className="structure-display">
               {patient.molecular_structure}
-            </pre>
+            </div>
           ) : (
             <div>
               <p>No structure calculated yet.</p>
               <button
                 onClick={handleCalculateAndSave}
                 disabled={isCalculating || !isServiceReady}
-                className="calculate-button"
+                className="action-button-green"
               >
                 {isCalculating
                   ? "Calculating..."

@@ -13,15 +13,16 @@
 
 .modal-content {
   background-color: #ffffff;
-  padding: 25px;
+  padding: 30px;
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-top: 5px solid #007bff;
 }
 
 .modal-header {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e9ecef;
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
@@ -29,7 +30,8 @@
 .modal-header h3 {
   margin: 0;
   font-size: 1.4rem;
-  color: #333;
+  color: #2c3e50;
+  line-height: 1.4;
 }
 
 .modal-header .patient-name {
@@ -45,18 +47,26 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  color: #495057;
 }
 
 .modal-body textarea,
 .modal-body input[type="datetime-local"] {
   width: 100%;
-  padding: 12px 10px;
-  border: 1px solid #ddd;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
   border-radius: 5px;
   box-sizing: border-box; /* Important */
-  font-size: 16px;
+  font-size: 1rem;
   font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-body textarea:focus,
+.modal-body input[type="datetime-local"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  outline: none;
 }
 
 .modal-body textarea {
@@ -76,8 +86,9 @@
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .modal-footer .btn-primary {
@@ -89,9 +100,9 @@
 }
 
 .modal-footer .btn-secondary {
-  background-color: #f1f1f1;
-  color: #333;
+  background-color: #6c757d;
+  color: white;
 }
 .modal-footer .btn-secondary:hover {
-  background-color: #ddd;
+  background-color: #5a6268;
 }

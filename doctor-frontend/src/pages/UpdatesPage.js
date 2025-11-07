@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UpdateCard from "../components/UpdateCard";
-
-const UpdateListContainer = {
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "flex-start",
-  padding: "0 10px",
-};
+import "./ListPage.css"; // Re-use the same CSS
 
 function UpdatesPage() {
   const [updatePatients, setUpdatePatients] = useState([]);
@@ -19,29 +13,22 @@ function UpdatesPage() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          setError("No token found. Please log in again.");
+          setError("Authorization failed.");
           setLoading(false);
           return;
         }
 
-        const config = {
-          headers: { "x-auth-token": token },
-        };
-
-        // We fetch ALL patients from the same endpoint
+        const config = { headers: { "x-auth-token": token } };
         const res = await axios.get(
           "http://localhost:5001/api/patients",
           config
         );
 
-        // --- THIS IS THE KEY ---
-        // We filter the results on the frontend
         const updates = res.data.filter(
           (patient) =>
             patient.update_type === "prescription" ||
             patient.update_type === "appointment"
         );
-        // --- END OF KEY ---
 
         setUpdatePatients(updates);
         setLoading(false);
@@ -60,17 +47,34 @@ function UpdatesPage() {
   }, []);
 
   if (loading) {
-    return <h2>Loading updates...</h2>;
+    return (
+      <div className="page-container">
+        <div className="page-header">
+          <h2>Patient Updates</h2>
+        </div>
+        <p>Loading updates...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <h2 style={{ color: "red" }}>{error}</h2>;
+    return (
+      <div className="page-container">
+        <div className="page-header">
+          <h2>Patient Updates</h2>
+        </div>
+        <p className="page-error">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>Patient Updates ({updatePatients.length})</h2>
-      <div style={UpdateListContainer}>
+    <div className="page-container">
+      <div className="page-header">
+        <h2>Patient Updates</h2>
+        <span className="count-badge blue">{updatePatients.length}</span>
+      </div>
+      <div className="card-list-container">
         {updatePatients.length > 0 ? (
           updatePatients.map((patient) => (
             <UpdateCard key={patient._id} patient={patient} />

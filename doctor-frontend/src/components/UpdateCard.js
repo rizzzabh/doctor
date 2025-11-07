@@ -1,16 +1,16 @@
 import React from "react";
-import "./UpdateCard.css"; // We'll create this
 import { Link } from "react-router-dom";
+import "./UpdateCard.css";
 
 function UpdateCard({ patient }) {
   const getUpdateInfo = () => {
     switch (patient.update_type) {
       case "prescription":
-        return { text: "Needs Prescription", color: "#e67e22" }; // Orange
+        return { text: "Needs Prescription", className: "prescription" };
       case "appointment":
-        return { text: "Wants Appointment", color: "#3498db" }; // Blue
+        return { text: "Wants Appointment", className: "appointment" };
       default:
-        return { text: "No Update", color: "#95a5a6" }; // Gray
+        return { text: "No Update", className: "none" };
     }
   };
 
@@ -25,10 +25,7 @@ function UpdateCard({ patient }) {
             <strong>Age:</strong> {patient.age || "N/A"}
           </p>
         </div>
-        <div
-          className="update-card-footer"
-          style={{ backgroundColor: updateInfo.color }}
-        >
+        <div className={`update-card-footer ${updateInfo.className}`}>
           {updateInfo.text}
         </div>
       </div>

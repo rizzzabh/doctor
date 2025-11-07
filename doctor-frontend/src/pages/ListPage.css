@@ -1,0 +1,46 @@
+/* Shared styles for PatientListPage and UpdatesPage */
+.page-container {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.count-badge {
+  background-color: #6c757d;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.count-badge.blue {
+  background-color: #007bff;
+}
+
+.page-error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.card-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* Negative margin to align cards */
+  margin: -10px;
+}

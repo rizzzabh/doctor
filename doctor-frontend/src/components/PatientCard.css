@@ -1,36 +1,38 @@
 .patient-card {
   background: #ffffff;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #e9ecef;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   margin: 10px;
   width: 300px;
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.patient-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .patient-card-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.patient-card-header h3 {
-  margin: 0;
-  color: #333;
+  border-bottom: 1px solid #f1f3f5;
 }
 
 .gender-icon {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 2rem;
+  margin-right: 15px;
+  line-height: 1;
 }
-.gender-icon.male {
-  color: #3498db; /* Blue */
-}
-.gender-icon.female {
-  color: #e91e63; /* Pink */
+
+.patient-name {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
 .patient-card-body {
@@ -39,19 +41,22 @@
 }
 
 .patient-card-body p {
-  margin: 5px 0;
-  color: #555;
+  margin: 8px 0;
+  color: #495057;
+  font-size: 0.95rem;
 }
 
 .patient-card-body p strong {
-  color: #000;
+  color: #212529;
 }
 
 .patient-card-footer {
   padding: 15px 20px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #f0f0f0;
+  background-color: #f8f9fa;
+  border-top: 1px solid #f1f3f5;
   text-align: right;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .patient-card-footer .details-button {
@@ -62,12 +67,12 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none; /* Add this */
-  display: inline-block; /* Add this */
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
 }
 
 .patient-card-footer .details-button:hover {
   background-color: #0056b3;
-  color: white; /* Add this */
+  color: white;
 }

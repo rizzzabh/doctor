@@ -3,13 +3,17 @@ import "./Modal.css";
 
 function PrescriptionModal({ patient, onClose, onSend }) {
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSend = () => {
     if (!text) {
       alert("Please write a prescription.");
       return;
     }
-    onSend(text); // Pass the text up to the parent
+    setLoading(true);
+    // Pass the text up to the parent
+    // onSend will handle the API call
+    onSend(text);
   };
 
   return (
@@ -33,11 +37,19 @@ function PrescriptionModal({ patient, onClose, onSend }) {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
+          <button
+            className="btn btn-secondary"
+            onClick={onClose}
+            disabled={loading}
+          >
             Cancel
           </button>
-          <button className="btn btn-primary" onClick={handleSend}>
-            Send
+          <button
+            className="btn btn-primary"
+            onClick={handleSend}
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Send"}
           </button>
         </div>
       </div>

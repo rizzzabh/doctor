@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import PrescriptionModal from "../components/PrescriptionModal"; // <-- IMPORT
-import AppointmentModal from "../components/AppointmentModal"; // <-- IMPORT
-import "./PatientDetailPage.css"; // Re-use the styles
-import "../components/Modal.css"; // <-- IMPORT MODAL CSS
+import PrescriptionModal from "../components/PrescriptionModal";
+import AppointmentModal from "../components/AppointmentModal";
+import "./PatientDetailPage.css"; // Re-use the new styles
+import "../components/Modal.css";
 
 function UpdateDetailPage() {
   const { id } = useParams();
@@ -13,7 +13,6 @@ function UpdateDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // --- State for our Modals ---
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
 
@@ -44,7 +43,6 @@ function UpdateDetailPage() {
     fetchPatient();
   }, [id]);
 
-  // --- Handle Sending Prescription ---
   const handleSendPrescription = async (prescriptionText) => {
     try {
       const token = localStorage.getItem("token");
@@ -63,8 +61,6 @@ function UpdateDetailPage() {
 
       alert("Prescription sent successfully!");
       setShowPrescriptionModal(false);
-      // We should also update the patient's status to 'none' here
-      // For now, just navigate back to the list
       navigate("/dashboard/updates");
     } catch (err) {
       console.error(err);
@@ -72,7 +68,6 @@ function UpdateDetailPage() {
     }
   };
 
-  // --- Handle Scheduling Appointment ---
   const handleScheduleAppointment = async (appointmentDate) => {
     try {
       const token = localStorage.getItem("token");
@@ -91,7 +86,6 @@ function UpdateDetailPage() {
 
       alert("Appointment scheduled successfully!");
       setShowAppointmentModal(false);
-      // We should also update the patient's status to 'none' here
       navigate("/dashboard/updates");
     } catch (err) {
       console.error(err);
@@ -99,13 +93,10 @@ function UpdateDetailPage() {
     }
   };
 
-  // --- Updated Action Buttons ---
   const renderActionButtons = () => {
     if (!patient) return null;
 
-    // "Send Prescription" button now opens the modal
     const onSendPrescription = () => setShowPrescriptionModal(true);
-    // "Schedule Appointment" button now opens the modal
     const onSchedule = () => setShowAppointmentModal(true);
 
     switch (patient.update_type) {
@@ -134,13 +125,39 @@ function UpdateDetailPage() {
     }
   };
 
-  if (loading) return <h2>Loading patient details...</h2>;
-  if (error) return <h2 style={{ color: "red" }}>{error}</h2>;
-  if (!patient) return <h2>Patient not found.</h2>;
+  if (loading) {
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Loading Update...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Error</h2>
+        </div>
+        <p className="page-error">{error}</p>
+      </div>
+    );
+  }
+
+  if (!patient) {
+    return (
+      <div className="patient-detail-container">
+        <div className="page-header">
+          <h2>Patient Not Found</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="patient-detail-container">
-      {/* --- Render Modals (they are invisible until state is true) --- */}
       {showPrescriptionModal && (
         <PrescriptionModal
           patient={patient}
@@ -157,15 +174,17 @@ function UpdateDetailPage() {
         />
       )}
 
-      {/* --- Page Content --- */}
-      <Link to="/dashboard/updates" className="back-link">
-        &larr; Back to Updates
-      </Link>
+      <div className="detail-page-header">
+        <Link to="/dashboard/updates" className="back-link">
+          &larr; Back to Updates
+        </Link>
+        <h2 className="patient-name-header">{patient.name}</h2>
+        <p style={{ marginTop: "5px", color: "#495057" }}>
+          <strong>Update Request:</strong> {patient.update_type}
+        </p>
+      </div>
 
-      <h2 className="patient-name-header">{patient.name}</h2>
-      <p>
-        <strong>Update Request:</strong> {patient.update_type}
-      </p>
+      {error && <p className="page-error">{error}</p>}
 
       <div className="detail-grid">
         <div className="detail-card full-width">
@@ -176,18 +195,14 @@ function UpdateDetailPage() {
         <div className="detail-card">
           <h3>Recommended Structure</h3>
           {patient.molecular_structure ? (
-            <pre
-              style={{
-                backgroundColor: "#eafaf1",
-                border: "1px solid #27ae60",
-              }}
-            >
+            <div className="structure-display">
               {patient.molecular_structure}
-            </pre>
+            </div>
           ) : (
-            <p>
-              No structure has been calculated for this patient yet. Please go
-              to the main "Patients" list to calculate it.
+            <p style={{ color: "#dc3545", fontWeight: 500 }}>
+              No structure has been calculated for this patient. Please go to
+              the main "Patients" list, find this patient, and calculate the
+              structure first.
             </p>
           )}
         </div>

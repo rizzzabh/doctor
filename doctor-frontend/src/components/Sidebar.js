@@ -1,13 +1,14 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Sidebar.css"; // We'll create this CSS file
+import { NavLink, useNavigate } from "react-router-dom";
+import "./Sidebar.css";
+// We'll use react-router-dom's NavLink for active styling
 
 function Sidebar() {
   const navigate = useNavigate();
 
   const onLogout = () => {
-    localStorage.removeItem("token"); // Clear the token
-    navigate("/login"); // Redirect to login
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
@@ -15,16 +16,17 @@ function Sidebar() {
       <div className="sidebar-header">
         <h3>Doctor's Panel</h3>
       </div>
-      <ul className="sidebar-links">
-        <li>
-          {/* Link to the 'Patients' page */}
-          <Link to="/dashboard/patients">Patients</Link>
-        </li>
-        <li>
-          {/* Link to the 'Updates' page */}
-          <Link to="/dashboard/updates">Updates</Link>
-        </li>
-      </ul>
+      <nav className="sidebar-nav">
+        <ul>
+          <li>
+            {/* NavLink adds an 'active' class automatically */}
+            <NavLink to="/dashboard/patients">Patients</NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard/updates">Updates</NavLink>
+          </li>
+        </ul>
+      </nav>
       <div className="sidebar-footer">
         <button onClick={onLogout} className="logout-button">
           Logout

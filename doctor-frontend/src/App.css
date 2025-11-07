@@ -1,32 +1,38 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background-color: #f4f7f6;
+/* --- Main App Wrapper --- */
+.App {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ============================================
+Login & Register Form Container
+============================================
+*/
+
+.auth-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin: 0;
-}
-
-.App {
-  width: 100%;
+  padding: 20px;
 }
 
 .form-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 30px;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
 }
 
 .form-container h2 {
   text-align: center;
-  color: #333;
+  color: #2c3e50;
   margin-bottom: 25px;
+  font-weight: 600;
 }
 
 .form-group {
@@ -37,40 +43,75 @@ body {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  color: #495057;
+  font-size: 0.9rem;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px 10px;
-  border: 1px solid #ddd;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
   border-radius: 5px;
-  box-sizing: border-box; /* Important for padding to work */
-  font-size: 16px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-button {
+.form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.auth-button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
-  transition: background-color 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
-  background-color: #0056b3;
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
-p {
+.auth-button:disabled {
+  background: #ced4da;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form-container p {
   text-align: center;
   margin-top: 20px;
+  color: #6c757d;
 }
-/* ... keep all your existing form styles ... */
+
+.form-container p a {
+  font-weight: 600;
+}
+
+.auth-error {
+  color: #dc3545; /* Red */
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+Dashboard Layout
+============================================
+*/
 
 .dashboard-layout {
   display: flex;
@@ -78,16 +119,8 @@ p {
 
 .dashboard-content {
   /* This margin-left must be the same as the sidebar width */
-  margin-left: 240px;
+  margin-left: 250px;
   padding: 30px;
   width: 100%;
-}
-
-/* Page Headers */
-.dashboard-content h2 {
-  font-size: 1.8rem;
-  color: #333;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  min-height: 100vh;
 }

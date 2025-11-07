@@ -3,13 +3,22 @@ import "./Modal.css";
 
 function AppointmentModal({ patient, onClose, onSchedule }) {
   const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Get current datetime in a format the input accepts
+  const getMinDateTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
+  };
 
   const handleSchedule = () => {
     if (!date) {
       alert("Please select a date and time.");
       return;
     }
-    onSchedule(date); // Pass the date up to the parent
+    setLoading(true);
+    onSchedule(date);
   };
 
   return (
@@ -29,15 +38,24 @@ function AppointmentModal({ patient, onClose, onSchedule }) {
               id="appointment-date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              min={getMinDateTime()} // Prevents scheduling in the past
             />
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
+          <button
+            className="btn btn-secondary"
+            onClick={onClose}
+            disabled={loading}
+          >
             Cancel
           </button>
-          <button className="btn btn-primary" onClick={handleSchedule}>
-            Schedule
+          <button
+            className="btn btn-primary"
+            onClick={handleSchedule}
+            disabled={loading}
+          >
+            {loading ? "Scheduling..." : "Schedule"}
           </button>
         </div>
       </div>
