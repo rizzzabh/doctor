@@ -54,3 +54,36 @@
   white-space: pre-wrap; /* Wraps long text */
   word-wrap: break-word;
 }
+/* ... (all your existing styles) ... */
+
+.action-button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.action-button-green,
+.action-button-blue {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-button-green {
+  background-color: #27ae60; /* Green */
+  color: white;
+}
+.action-button-green:hover {
+  background-color: #229954;
+}
+
+.action-button-blue {
+  background-color: #3498db; /* Blue */
+  color: white;
+}
+.action-button-blue:hover {
+  background-color: #2980b9;
+}

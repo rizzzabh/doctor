@@ -36,7 +36,7 @@ const PatientSchema = new Schema({
 
   // --- Calculated Data (initially empty) ---
   molecular_structure: {
-    type: Object, // Will be stored here after frontend calculates it
+    type: String, // Will be stored here after frontend calculates it
     default: null,
   },
 

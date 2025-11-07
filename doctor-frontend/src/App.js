@@ -12,6 +12,7 @@ import PatientListPage from "./pages/PatientListPage";
 import UpdatesPage from "./pages/UpdatesPage";
 import PrivateRoute from "./components/PrivateRoute";
 import PatientDetailPage from "./pages/PatientDetailPage";
+import UpdateDetailPage from "./pages/UpdateDetailPage";
 import "./App.css";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
             <Route path="updates" element={<UpdatesPage />} />
 
             <Route path="patients/:id" element={<PatientDetailPage />} />
+            <Route path="updates/:id" element={<UpdateDetailPage />} />
           </Route>
         </Routes>
       </div>

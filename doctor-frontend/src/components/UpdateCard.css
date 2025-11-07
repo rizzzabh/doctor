@@ -31,3 +31,17 @@
   text-align: center;
   font-size: 0.9rem;
 }
+.update-card-link {
+  text-decoration: none; /* Removes the underline from the link */
+  color: inherit; /* Makes the text color normal */
+}
+
+.update-card {
+  /* ... (rest of your styles are the same) ... */
+  transition: box-shadow 0.2s, transform 0.2s; /* Add a little hover effect */
+}
+
+.update-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
