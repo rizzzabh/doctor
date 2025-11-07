@@ -1,6 +1,6 @@
 import React from "react";
 import "./PatientCard.css"; // We'll create this CSS
-
+import { Link } from "react-router-dom";
 function PatientCard({ patient }) {
   // A function to get an icon for gender
   const getGenderIcon = (sex) => {
@@ -26,7 +26,12 @@ function PatientCard({ patient }) {
         </p>
       </div>
       <div className="patient-card-footer">
-        <button>View Full Details</button>
+        <Link
+          to={`/dashboard/patients/${patient._id}`}
+          className="details-button"
+        >
+          View Full Details
+        </Link>
       </div>
     </div>
   );

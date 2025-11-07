@@ -11,6 +11,7 @@ import DashboardPage from "./pages/DashboardPage";
 import PatientListPage from "./pages/PatientListPage";
 import UpdatesPage from "./pages/UpdatesPage";
 import PrivateRoute from "./components/PrivateRoute";
+import PatientDetailPage from "./pages/PatientDetailPage";
 import "./App.css";
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
             {/* Child routes of /dashboard */}
             <Route path="patients" element={<PatientListPage />} />
             <Route path="updates" element={<UpdatesPage />} />
+
+            <Route path="patients/:id" element={<PatientDetailPage />} />
           </Route>
         </Routes>
       </div>

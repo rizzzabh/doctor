@@ -1,13 +1,12 @@
 import express from "express";
 import Patient from "../models/Patient.js";
-// We'll add auth middleware later to protect these routes
-// import auth from '../middleware/auth.js';
+import authMiddleware from "../middleware/auth.js"; // Import auth middleware
 
 const router = express.Router();
 
 // @route   POST api/patients/add
-// @desc    Add a new patient (called by PATIENT-BACKEND)
-// @access  Public (for now)
+// @desc    Add or update a patient (called by PATIENT-BACKEND)
+// @access  Public
 router.post("/add", async (req, res) => {
   try {
     const { name, email, age, sex, medical_history, code, grade, update_type } =
@@ -53,10 +52,11 @@ router.post("/add", async (req, res) => {
 
 // @route   GET api/patients
 // @desc    Get all patients (for the doctor's dashboard)
-// @access  Private (we'll add auth)
-router.get("/", async (req, res) => {
+// @access  Private (Protected by auth)
+router.get("/", authMiddleware, async (req, res) => {
   try {
-    // Later, we'll filter this by doctor ID
+    // We can now access the logged-in doctor's ID via req.doctor.id
+    // (We'll use this later to show *only* their patients)
     const patients = await Patient.find().sort({ date_added: -1 });
     res.json(patients);
   } catch (err) {
@@ -67,6 +67,29 @@ router.get("/", async (req, res) => {
 
 // We will add more routes here soon:
 // 1. GET /api/patients/:id (Get a single patient's details)
+// @route   GET api/patients/:id
+// @desc    Get a single patient by ID
+// @access  Private
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
+
+    if (!patient) {
+      return res.status(404).json({ msg: "Patient not found" });
+    }
+
+    // We can add a check here later to make sure the doctor
+    // is allowed to see this patient.
+
+    res.json(patient);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Patient not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
 // 2. PUT /api/patients/:id/structure (Save the calculated structure)
 
 export default router;

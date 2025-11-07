@@ -22,16 +22,35 @@ function PatientListPage() {
         // Get the token from localStorage
         const token = localStorage.getItem("token");
 
-        // We need to send the token to our protected routes
-        // We'll create a special 'auth' middleware next,
-        // but for now, the GET route is public.
-        const res = await axios.get("http://localhost:5001/api/patients");
+        if (!token) {
+          setError("No token found. Please log in again.");
+          setLoading(false);
+          return;
+        }
+
+        // Create an axios config object to send the token in the header
+        const config = {
+          headers: {
+            "x-auth-token": token,
+          },
+        };
+
+        // Pass the config object with the GET request
+        const res = await axios.get(
+          "http://localhost:5001/api/patients",
+          config
+        );
 
         setPatients(res.data); // Store the patient list
         setLoading(false);
       } catch (err) {
         console.error(err);
-        setError("Failed to fetch patients. Please try again.");
+        // Check for auth error
+        if (err.response && err.response.status === 401) {
+          setError("Authorization failed. Please log in again.");
+        } else {
+          setError("Failed to fetch patients.");
+        }
         setLoading(false);
       }
     };

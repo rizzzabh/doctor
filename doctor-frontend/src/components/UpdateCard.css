@@ -1,0 +1,33 @@
+.update-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  margin: 10px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* To make footer corners rounded */
+}
+
+.update-card-body {
+  padding: 20px;
+}
+
+.update-card-body h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.update-card-body p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.update-card-footer {
+  padding: 12px 20px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9rem;
+}
