@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const PatientSchema = new Schema({
-  // We'll link this patient to a doctor later,
-  // but for now, we'll store all patients.
-
-  // Basic Info from Patient Backend
+  // Basic Info
   name: {
     type: String,
     required: true,
@@ -13,7 +10,7 @@ const PatientSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true, // So we don't add the same patient twice
+    unique: true,
   },
   age: {
     type: Number,
@@ -22,29 +19,35 @@ const PatientSchema = new Schema({
     type: String,
   },
   medical_history: {
-    type: Object, // Flexible field for the context object
+    type: Object,
   },
 
   // --- Data for Calculation ---
   code: {
-    type: Object, // The JSON object you mentioned
+    type: Object,
     required: true,
   },
   grade: {
-    type: String, // Or Number, based on what you expect
+    type: String,
   },
 
-  // --- Calculated Data (initially empty) ---
+  // --- Calculated Data ---
   molecular_structure: {
-    type: String, // Will be stored here after frontend calculates it
+    type: String, // Correctly set to String
     default: null,
   },
 
   // --- Update Status ---
   update_type: {
     type: String,
-    enum: ["none", "prescription", "appointment"], // Only allows these values
+    enum: ["none", "prescription", "appointment"],
     default: "none",
+  },
+
+  // --- 👇 NEW FIELD TO STORE FILE URLS 👇 ---
+  report_files: {
+    type: Array, // Will store an array of objects like [{ name: '...', url: '...' }]
+    default: [],
   },
 
   // --- Timestamps ---

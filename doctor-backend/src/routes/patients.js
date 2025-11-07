@@ -8,12 +8,22 @@ const router = express.Router();
 // @route   POST api/patients/add
 router.post("/add", async (req, res) => {
   try {
-    const { name, email, age, sex, medical_history, code, grade, update_type } =
-      req.body;
+    const {
+      name,
+      email,
+      age,
+      sex,
+      medical_history,
+      code,
+      grade,
+      update_type,
+      report_files, // <-- 1. Get the new field
+    } = req.body;
 
     let patient = await Patient.findOne({ email });
 
     if (patient) {
+      // Update existing patient
       patient.name = name;
       patient.age = age;
       patient.sex = sex;
@@ -21,11 +31,13 @@ router.post("/add", async (req, res) => {
       patient.code = code;
       patient.grade = grade;
       patient.update_type = update_type;
+      patient.report_files = report_files || []; // <-- 2. Update the field
 
       await patient.save();
       return res.status(200).json({ msg: "Patient updated", patient });
     }
 
+    // Create new patient
     patient = new Patient({
       name,
       email,
@@ -35,6 +47,7 @@ router.post("/add", async (req, res) => {
       code,
       grade,
       update_type,
+      report_files: report_files || [], // <-- 3. Save the field
     });
 
     await patient.save();
@@ -63,7 +76,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
     if (!patient) {
-      return res.status(404).json({ msg: "Patient not found" });
+      return res.status(44).json({ msg: "Patient not found" });
     }
     res.json(patient);
   } catch (err) {
@@ -77,25 +90,18 @@ router.get("/:id", authMiddleware, async (req, res) => {
 
 // --- ROUTE 4: SAVE STRUCTURE ---
 // @route   PUT api/patients/:id/structure
-//
-// THIS IS THE ROUTE THAT IS CAUSING THE 404.
-// MAKE SURE THIS CODE IS IN YOUR FILE.
-//
 router.put("/:id/structure", authMiddleware, async (req, res) => {
   try {
     const { molecular_structure } = req.body;
 
     let patient = await Patient.findById(req.params.id);
-
     if (!patient) {
       return res.status(404).json({ msg: "Patient not found" });
     }
 
     patient.molecular_structure = molecular_structure;
-
     await patient.save();
-
-    res.json(patient); // Return the updated patient
+    res.json(patient);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

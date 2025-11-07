@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import DoctorRecommendationService from "../services/DoctorRecommendationService";
-import "./PatientDetailPage.css"; // New styles
+import "./PatientDetailPage.css";
 
-// Create a single instance of the service
 const recommendationService = new DoctorRecommendationService();
 
 function PatientDetailPage() {
@@ -59,11 +58,11 @@ function PatientDetailPage() {
         setLoading(false);
       }
     };
-
     fetchPatient();
   }, [id]);
 
   const handleCalculateAndSave = async () => {
+    // ... (This function is unchanged)
     if (!patient || !isServiceReady) {
       setError("Service is not ready or no patient data.");
       return;
@@ -110,6 +109,45 @@ function PatientDetailPage() {
       setIsCalculating(false);
     }
   };
+
+  // --- 👇 THIS IS THE UPDATED FUNCTION 👇 ---
+  const renderReportFiles = (files) => {
+    if (!files || files.length === 0) {
+      return <p>No reports uploaded for this patient.</p>;
+    }
+
+    const isGoogleDriveLink = (url) => {
+      return url.includes("drive.google.com");
+    };
+
+    return (
+      <div className="reports-container">
+        {files.map((file, index) => (
+          <div key={index} className="report-item">
+            <span className="report-name">{file.name}</span>
+
+            {/* * If it's an image AND NOT a Google Drive link, show the image.
+             * Otherwise, show a link.
+             */}
+            {file.type === "image" && !isGoogleDriveLink(file.url) ? (
+              <img src={file.url} alt={file.name} className="report-image" />
+            ) : (
+              <a
+                href={file.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="report-link"
+              >
+                {file.type === "image" ? "View Image" : "View PDF"}
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // ... (rest of the component (loading, JSX) is unchanged) ...
 
   if (loading) {
     return (
@@ -185,6 +223,12 @@ function PatientDetailPage() {
         <div className="detail-card full-width">
           <h3>Medical History</h3>
           {renderObject(patient.medical_history)}
+        </div>
+
+        {/* --- THIS SECTION WILL NOW WORK --- */}
+        <div className="detail-card full-width">
+          <h3>Patient Reports</h3>
+          {renderReportFiles(patient.report_files)}
         </div>
 
         <div className="detail-card full-width">
