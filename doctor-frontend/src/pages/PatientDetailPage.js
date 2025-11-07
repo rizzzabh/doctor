@@ -4,7 +4,6 @@ import axios from "axios";
 import DoctorRecommendationService from "../services/DoctorRecommendationService";
 import "./PatientDetailPage.css";
 
-// Create a single instance of the service
 const recommendationService = new DoctorRecommendationService();
 
 function PatientDetailPage() {
@@ -15,15 +14,16 @@ function PatientDetailPage() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isServiceReady, setIsServiceReady] = useState(false);
 
-  // Load the recommendation rules
   useEffect(() => {
     const loadServiceRules = async () => {
       try {
+        console.log("DEBUG: 1. Loading rules..."); // Log 1
         const success = await recommendationService.loadRules(
           "/Riders_12_March_2025.json"
         );
         if (success) {
           setIsServiceReady(true);
+          console.log("DEBUG: 2. Rules loaded successfully."); // Log 2
         } else {
           setError("CRITICAL: Failed to load recommendation rules.");
         }
@@ -35,7 +35,6 @@ function PatientDetailPage() {
     loadServiceRules();
   }, []);
 
-  // Fetch the patient data
   useEffect(() => {
     const fetchPatient = async () => {
       setLoading(true);
@@ -52,6 +51,7 @@ function PatientDetailPage() {
           config
         );
         setPatient(res.data);
+        console.log("DEBUG: 3. Patient data fetched:", res.data); // Log 3
         setLoading(false);
       } catch (err) {
         console.error("Fetch Patient Error:", err);
@@ -63,10 +63,6 @@ function PatientDetailPage() {
     fetchPatient();
   }, [id]);
 
-  /**
-   * This function handles the "Calculate & Save" button click.
-   * It now includes the all-important check for the token.
-   */
   const handleCalculateAndSave = async () => {
     if (!patient || !isServiceReady) {
       setError("Service is not ready or no patient data.");
@@ -74,55 +70,67 @@ function PatientDetailPage() {
     }
 
     setIsCalculating(true);
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
-      // --- THIS IS THE FIX ---
-      // 1. Get token and set headers
-      const token = localStorage.getItem("token");
+      // --- START OF DEBUG BLOCK ---
+      console.log("DEBUG: 4. handleCalculateAndSave triggered.");
+      console.log("DEBUG: 5. Service Ready?", isServiceReady);
+      console.log("DEBUG: 6. Using Grade:", patient.grade);
+      console.log("DEBUG: 7. Using Code:", JSON.stringify(patient.code));
+      // --- END OF DEBUG BLOCK ---
 
-      // 2. CHECK FOR THE TOKEN
-      if (!token) {
-        setError("Your session has expired. Please log in again.");
-        setIsCalculating(false);
-        return; // Stop execution
-      }
-
-      // If we have a token, create the config
-      const config = {
-        headers: {
-          "x-auth-token": token,
-        },
-      };
-      // --- END OF FIX ---
-
-      // 3. Run the REAL calculation
       const calculatedStructure = recommendationService.getRecommendation(
         patient.grade,
         patient.code
       );
 
-      // 4. Send the new structure to the backend
+      // --- THIS IS THE MOST IMPORTANT LOG ---
+      console.log("DEBUG: 8. Calculated Structure:", calculatedStructure);
+      // ---
+
+      if (
+        calculatedStructure.includes("Error") ||
+        calculatedStructure.includes("No specific recommendation")
+      ) {
+        setError(calculatedStructure);
+        setIsCalculating(false);
+        return; // Stop if calculation failed
+      }
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Your session has expired. Please log in again.");
+        setIsCalculating(false);
+        return;
+      }
+
+      const config = { headers: { "x-auth-token": token } };
+
       const res = await axios.put(
         `http://localhost:5001/api/patients/${id}/structure`,
         { molecular_structure: calculatedStructure },
-        config // Pass the config with the token
+        config
       );
 
-      // 5. Update the page with the new patient data
+      console.log(
+        "DEBUG: 9. Save successful. Server responded with:",
+        res.data
+      ); // Log 9
       setPatient(res.data);
       setIsCalculating(false);
     } catch (err) {
       console.error("Save Structure Error:", err);
-      // Get the specific error message from the backend
       const errorMsg =
         err.response && err.response.data
           ? err.response.data.msg
           : "Failed to save structure.";
-      setError(errorMsg); // This will show "No token, authorization denied" if it fails
+      setError(errorMsg);
       setIsCalculating(false);
     }
   };
+
+  // ... (rest of the file (JSX) is the same) ...
 
   if (loading) {
     return <h2>Loading patient details...</h2>;
@@ -136,7 +144,6 @@ function PatientDetailPage() {
     return <h2>Patient not found.</h2>;
   }
 
-  // Helper to display object data nicely
   const renderObject = (obj) => {
     return <pre>{JSON.stringify(obj, null, 2)}</pre>;
   };
