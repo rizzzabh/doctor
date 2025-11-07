@@ -4,6 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./src/routes/auth.js";
 import patientRoutes from "./src/routes/patients.js";
+import prescriptionRoutes from "./src/routes/prescriptions.js"; // <-- ADD THIS
+import appointmentRoutes from "./src/routes/appointments.js"; // <-- ADD THIS
 
 // Load environment variables
 dotenv.config();
@@ -11,7 +13,6 @@ dotenv.config();
 const app = express();
 
 // --- Database Connection ---
-// The function MUST be defined here
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -21,8 +22,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-// Call the function to connect
 connectDB();
 
 // --- Middlewares ---
@@ -31,8 +30,10 @@ app.use(express.json()); // Allow server to accept JSON data
 
 // --- API Routes ---
 app.get("/", (req, res) => res.send("Doctor Backend API Running"));
-app.use("/api/auth", authRoutes); // All auth routes (register, login)
-app.use("/api/patients", patientRoutes); // The new line for patient routes
+app.use("/api/auth", authRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/prescriptions", prescriptionRoutes); // <-- ADD THIS
+app.use("/api/appointments", appointmentRoutes); // <-- ADD THIS
 
 // --- Start Server ---
 const PORT = process.env.PORT || 5001;

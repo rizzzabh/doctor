@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./PatientDetailPage.css"; // We can re-use the same CSS!
+import PrescriptionModal from "../components/PrescriptionModal"; // <-- IMPORT
+import AppointmentModal from "../components/AppointmentModal"; // <-- IMPORT
+import "./PatientDetailPage.css"; // Re-use the styles
+import "../components/Modal.css"; // <-- IMPORT MODAL CSS
 
 function UpdateDetailPage() {
-  const { id } = useParams(); // Gets the :id from the URL
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // --- State for our Modals ---
+  const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -36,16 +44,69 @@ function UpdateDetailPage() {
     fetchPatient();
   }, [id]);
 
-  // --- Action Buttons ---
+  // --- Handle Sending Prescription ---
+  const handleSendPrescription = async (prescriptionText) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = { headers: { "x-auth-token": token } };
+
+      const body = {
+        patientId: patient._id,
+        text: prescriptionText,
+      };
+
+      await axios.post(
+        "http://localhost:5001/api/prescriptions/create",
+        body,
+        config
+      );
+
+      alert("Prescription sent successfully!");
+      setShowPrescriptionModal(false);
+      // We should also update the patient's status to 'none' here
+      // For now, just navigate back to the list
+      navigate("/dashboard/updates");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send prescription.");
+    }
+  };
+
+  // --- Handle Scheduling Appointment ---
+  const handleScheduleAppointment = async (appointmentDate) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = { headers: { "x-auth-token": token } };
+
+      const body = {
+        patientId: patient._id,
+        appointmentDate: appointmentDate,
+      };
+
+      await axios.post(
+        "http://localhost:5001/api/appointments/create",
+        body,
+        config
+      );
+
+      alert("Appointment scheduled successfully!");
+      setShowAppointmentModal(false);
+      // We should also update the patient's status to 'none' here
+      navigate("/dashboard/updates");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to schedule appointment.");
+    }
+  };
+
+  // --- Updated Action Buttons ---
   const renderActionButtons = () => {
     if (!patient) return null;
 
-    // This is where we'll add the logic later to send
-    // prescriptions or schedule appointments.
-    const onSendPrescription = () =>
-      alert("Prescription sent! (Logic to be added)");
-    const onSchedule = () =>
-      alert("Appointment scheduled! (Logic to be added)");
+    // "Send Prescription" button now opens the modal
+    const onSendPrescription = () => setShowPrescriptionModal(true);
+    // "Schedule Appointment" button now opens the modal
+    const onSchedule = () => setShowAppointmentModal(true);
 
     switch (patient.update_type) {
       case "prescription":
@@ -79,6 +140,24 @@ function UpdateDetailPage() {
 
   return (
     <div className="patient-detail-container">
+      {/* --- Render Modals (they are invisible until state is true) --- */}
+      {showPrescriptionModal && (
+        <PrescriptionModal
+          patient={patient}
+          onClose={() => setShowPrescriptionModal(false)}
+          onSend={handleSendPrescription}
+        />
+      )}
+
+      {showAppointmentModal && (
+        <AppointmentModal
+          patient={patient}
+          onClose={() => setShowAppointmentModal(false)}
+          onSchedule={handleScheduleAppointment}
+        />
+      )}
+
+      {/* --- Page Content --- */}
       <Link to="/dashboard/updates" className="back-link">
         &larr; Back to Updates
       </Link>
@@ -89,7 +168,6 @@ function UpdateDetailPage() {
       </p>
 
       <div className="detail-grid">
-        {/* --- This card shows the final action buttons --- */}
         <div className="detail-card full-width">
           <h3>Doctor's Actions</h3>
           {renderActionButtons()}
