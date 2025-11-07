@@ -15,30 +15,30 @@ function LoginPage() {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // ... (imports and state variables are the same) ...
+  //   const navigate = useNavigate(); // Make sure this line is here
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Our backend API endpoint
       const res = await axios.post(
         "http://localhost:5001/api/auth/login",
         formData
       );
 
-      console.log(res.data); // This will log the { token: "..." }
-
-      // Store the token in localStorage
       localStorage.setItem("token", res.data.token);
 
-      // TODO: In the next step, we will redirect to the dashboard
-      // navigate('/dashboard');
-
-      alert("Login Successful!");
-      // For now, we'll just log in. Next step is redirecting.
+      // --- THIS IS THE CHANGE ---
+      // Redirect to the dashboard
+      navigate("/dashboard");
+      // --- END OF CHANGE ---
     } catch (err) {
       console.error(err.response.data);
       setError(err.response.data.msg || "Invalid Credentials");
     }
   };
+
+  // ... (return statement is the same) ...
 
   return (
     <div className="form-container">

@@ -1,0 +1,70 @@
+.patient-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  margin: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.patient-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.patient-card-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.gender-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.gender-icon.male {
+  color: #3498db; /* Blue */
+}
+.gender-icon.female {
+  color: #e91e63; /* Pink */
+}
+
+.patient-card-body {
+  padding: 15px 20px;
+  flex-grow: 1;
+}
+
+.patient-card-body p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.patient-card-body p strong {
+  color: #000;
+}
+
+.patient-card-footer {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #f0f0f0;
+  text-align: right;
+}
+
+.patient-card-footer button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.patient-card-footer button:hover {
+  background-color: #0056b3;
+}

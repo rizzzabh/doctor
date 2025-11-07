@@ -70,3 +70,24 @@ p {
   text-align: center;
   margin-top: 20px;
 }
+/* ... keep all your existing form styles ... */
+
+.dashboard-layout {
+  display: flex;
+}
+
+.dashboard-content {
+  /* This margin-left must be the same as the sidebar width */
+  margin-left: 240px;
+  padding: 30px;
+  width: 100%;
+}
+
+/* Page Headers */
+.dashboard-content h2 {
+  font-size: 1.8rem;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}

@@ -7,20 +7,38 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import "./App.css"; // We will create this file for basic styling
+import DashboardPage from "./pages/DashboardPage";
+import PatientListPage from "./pages/PatientListPage";
+import UpdatesPage from "./pages/UpdatesPage";
+import PrivateRoute from "./components/PrivateRoute";
+import "./App.css";
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* By default, show the login page */}
+          {/* Public Routes */}
           <Route path="/" element={<Navigate to="/login" />} />
-
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* We will add the /dashboard route in the next step */}
+          {/* Protected Dashboard Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <DashboardPage />
+              </PrivateRoute>
+            }
+          >
+            {/* Default dashboard page */}
+            <Route index element={<Navigate to="patients" />} />
+
+            {/* Child routes of /dashboard */}
+            <Route path="patients" element={<PatientListPage />} />
+            <Route path="updates" element={<UpdatesPage />} />
+          </Route>
         </Routes>
       </div>
     </Router>
