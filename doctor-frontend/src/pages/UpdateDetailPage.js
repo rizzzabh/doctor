@@ -175,9 +175,20 @@ function UpdateDetailPage() {
       )}
 
       <div className="detail-page-header">
-        <Link to="/dashboard/updates" className="back-link">
-          &larr; Back to Updates
-        </Link>
+        {/* --- THIS IS THE NEW SECTION --- */}
+        <div className="header-links">
+          <Link to="/dashboard/updates" className="back-link">
+            &larr; Back to Updates
+          </Link>
+          <Link
+            to={`/dashboard/patients/${patient._id}`}
+            className="profile-link"
+          >
+            View Full Profile &rarr;
+          </Link>
+        </div>
+        {/* --- END OF NEW SECTION --- */}
+
         <h2 className="patient-name-header">{patient.name}</h2>
         <p style={{ marginTop: "5px", color: "#495057" }}>
           <strong>Update Request:</strong> {patient.update_type}
