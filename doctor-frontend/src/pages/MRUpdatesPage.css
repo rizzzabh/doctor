@@ -1,0 +1,63 @@
+.mr-updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mr-update-card {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-left: 5px solid #007bff; /* Blue accent */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s;
+}
+
+.mr-update-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mr-update-header {
+  background-color: #f8f9fa;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.mr-update-date {
+  font-style: italic;
+  color: #6c757d;
+}
+
+.mr-update-body {
+  padding: 20px;
+}
+
+.mr-medicine-name {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.mr-molecule {
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #6c757d;
+}
+
+.mr-use {
+  margin: 0;
+  color: #343a40;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.mr-use strong {
+  color: #2c3e50;
+}

@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
-// We'll use react-router-dom's NavLink for active styling
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -19,11 +18,17 @@ function Sidebar() {
       <nav className="sidebar-nav">
         <ul>
           <li>
-            {/* NavLink adds an 'active' class automatically */}
-            <NavLink to="/dashboard/patients">Patients</NavLink>
+            <NavLink to="/dashboard/patients">
+              {/* We can add icons or emojis for better UI */}
+              🧑‍⚕️ Patients
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/dashboard/updates">Updates</NavLink>
+            <NavLink to="/dashboard/updates">🔔 Updates</NavLink>
+          </li>
+          {/* 👇 3. ADD THIS NEW LIST ITEM 👇 */}
+          <li>
+            <NavLink to="/dashboard/mr-updates">💊 MR Updates</NavLink>
           </li>
         </ul>
       </nav>

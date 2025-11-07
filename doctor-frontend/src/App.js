@@ -10,9 +10,10 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import PatientListPage from "./pages/PatientListPage";
 import UpdatesPage from "./pages/UpdatesPage";
-import PrivateRoute from "./components/PrivateRoute";
 import PatientDetailPage from "./pages/PatientDetailPage";
 import UpdateDetailPage from "./pages/UpdateDetailPage";
+import MRUpdatesPage from "./pages/MRUpdatesPage"; // <-- 1. IMPORT
+import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
 
 function App() {
@@ -39,10 +40,12 @@ function App() {
 
             {/* Child routes of /dashboard */}
             <Route path="patients" element={<PatientListPage />} />
-            <Route path="updates" element={<UpdatesPage />} />
-
             <Route path="patients/:id" element={<PatientDetailPage />} />
+            <Route path="updates" element={<UpdatesPage />} />
             <Route path="updates/:id" element={<UpdateDetailPage />} />
+
+            {/* 👇 2. ADD THIS NEW ROUTE 👇 */}
+            <Route path="mr-updates" element={<MRUpdatesPage />} />
           </Route>
         </Routes>
       </div>
